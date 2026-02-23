@@ -19,6 +19,7 @@ public partial class AuthorDialogWindow : Window
                 Id = authorToEdit.Id,
                 FirstName = authorToEdit.FirstName,
                 LastName = authorToEdit.LastName,
+                MiddleName = authorToEdit.MiddleName,
                 BirthDate = authorToEdit.BirthDate,
                 Country = authorToEdit.Country
             };
@@ -35,23 +36,24 @@ public partial class AuthorDialogWindow : Window
 
     private void LoadAuthorData()
     {
-        FirstNameTextBox.Text = CurrentAuthor.FirstName;
         LastNameTextBox.Text = CurrentAuthor.LastName;
+        FirstNameTextBox.Text = CurrentAuthor.FirstName;
+        MiddleNameTextBox.Text = CurrentAuthor.MiddleName;
         BirthDatePicker.SelectedDate = CurrentAuthor.BirthDate;
         CountryTextBox.Text = CurrentAuthor.Country;
     }
 
     private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(FirstNameTextBox.Text))
-        {
-            MessageBox.Show("Введите имя автора", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
-
         if (string.IsNullOrWhiteSpace(LastNameTextBox.Text))
         {
             MessageBox.Show("Введите фамилию автора", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(FirstNameTextBox.Text))
+        {
+            MessageBox.Show("Введите имя автора", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -60,19 +62,20 @@ public partial class AuthorDialogWindow : Window
             MessageBox.Show("Выберите дату рождения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
-        CurrentAuthor.FirstName = FirstNameTextBox.Text;
-        CurrentAuthor.LastName = LastNameTextBox.Text;
+
+        CurrentAuthor.LastName = LastNameTextBox.Text.Trim();
+        CurrentAuthor.FirstName = FirstNameTextBox.Text.Trim();
+        CurrentAuthor.MiddleName = string.IsNullOrWhiteSpace(MiddleNameTextBox.Text) ? null : MiddleNameTextBox.Text.Trim();
         CurrentAuthor.BirthDate = BirthDatePicker.SelectedDate.Value;
-        CurrentAuthor.Country = CountryTextBox.Text;
+        CurrentAuthor.Country = CountryTextBox.Text?.Trim() ?? "";
 
         DialogResult = true;
-
         Close();
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
         DialogResult = false;
-        Close() ;
+        Close();
     }
 }

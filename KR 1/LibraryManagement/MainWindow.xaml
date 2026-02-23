@@ -70,7 +70,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
                 <DataGridTextColumn Header="Название" Binding="{Binding Title}" Width="*"/>
-                <DataGridTextColumn Header="Автор" Binding="{Binding Author.LastName}" Width="*"/>
+                <DataGridTextColumn Header="Автор" Binding="{Binding Author.FullName}" Width="*"/>
                 <DataGridTextColumn Header="Жанр" Binding="{Binding Genre.Name}" Width="*"/>
                 <DataGridTextColumn Header="Год" Binding="{Binding PublishYear}" Width="Auto"/>
                 <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="150"/>

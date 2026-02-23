@@ -102,7 +102,7 @@ public class MainViewModel : ViewModelBase
         _context.Books.Include(b => b.Author).Include(b => b.Genre).Load();
 
         Authors = new ObservableCollection<Author>(_context.Authors.Local);
-        Authors.Insert(0, new Author { Id = 0, LastName = "Все авторы" });
+        Authors.Insert(0, new Author { Id = 0, LastName = "Все авторы", FirstName = "" });
         
         Genres = new ObservableCollection<Genre>(_context.Genres.Local);
         Genres.Insert(0, new Genre { Id = 0, Name = "Все жанры" });

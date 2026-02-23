@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Автор" 
-        Height="350" 
+        Height="400"
         Width="450"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
 
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -26,27 +27,31 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Имя -->
-        <Label Grid.Row="0" Grid.Column="0" Content="Имя:" Margin="5" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="0" Grid.Column="1" x:Name="FirstNameTextBox" Margin="5" Padding="3" Height="30"/>
-
         <!-- Фамилия -->
-        <Label Grid.Row="1" Grid.Column="0" Content="Фамилия:" Margin="5" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="1" Grid.Column="1" x:Name="LastNameTextBox" Margin="5" Padding="3" Height="30"/>
+        <Label Grid.Row="0" Grid.Column="0" Content="Фамилия:" Margin="5" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="0" Grid.Column="1" x:Name="LastNameTextBox" Margin="5" Padding="3" Height="30"/>
+
+        <!-- Имя -->
+        <Label Grid.Row="1" Grid.Column="0" Content="Имя:" Margin="5" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="FirstNameTextBox" Margin="5" Padding="3" Height="30"/>
+
+        <!-- Отчество (необязательное) -->
+        <Label Grid.Row="2" Grid.Column="0" Content="Отчество:" Margin="5" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="2" Grid.Column="1" x:Name="MiddleNameTextBox" Margin="5" Padding="3" Height="30"/>
 
         <!-- Дата рождения -->
-        <Label Grid.Row="2" Grid.Column="0" Content="Дата рождения:" Margin="5" VerticalAlignment="Center"/>
-        <DatePicker Grid.Row="2" Grid.Column="1" x:Name="BirthDatePicker" Margin="5" Height="30"/>
+        <Label Grid.Row="3" Grid.Column="0" Content="Дата рождения:" Margin="5" VerticalAlignment="Center"/>
+        <DatePicker Grid.Row="3" Grid.Column="1" x:Name="BirthDatePicker" Margin="5" Height="30"/>
 
         <!-- Страна -->
-        <Label Grid.Row="3" Grid.Column="0" Content="Страна:" Margin="5" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="3" Grid.Column="1" x:Name="CountryTextBox" Margin="5" Padding="3" Height="30"/>
+        <Label Grid.Row="4" Grid.Column="0" Content="Страна:" Margin="5" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="4" Grid.Column="1" x:Name="CountryTextBox" Margin="5" Padding="3" Height="30"/>
 
         <!-- Разделитель -->
-        <Rectangle Grid.Row="4" Grid.ColumnSpan="2" Height="1" Fill="LightGray" Margin="0,10,0,10"/>
+        <Rectangle Grid.Row="5" Grid.ColumnSpan="2" Height="1" Fill="LightGray" Margin="0,10,0,10"/>
 
         <!-- Кнопки -->
-        <StackPanel Grid.Row="6" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+        <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
             <Button x:Name="SaveButton" Content="Сохранить" Width="100" Height="35" Margin="0,0,10,0" Click="SaveButton_Click"/>
             <Button x:Name="CancelButton" Content="Отмена" Width="100" Height="35" Margin="0" Click="CancelButton_Click"/>
         </StackPanel>
