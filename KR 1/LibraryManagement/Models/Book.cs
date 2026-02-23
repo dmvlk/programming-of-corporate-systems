@@ -5,6 +5,13 @@ namespace LibraryManagement.Models;
 
 public class Book
 {
+    public Book()
+    {
+        Title = "";
+        ISBN = "";
+        Publisher = "";
+    }
+
     public int Id { get; set; }
     
     [Required]
@@ -27,7 +34,8 @@ public class Book
     public int GenreId { get; set; }
     
     [ForeignKey("AuthorId")]
-    public Author Author { get; set; }
+    public Author Author { get; set; } = null!;
+    
     [ForeignKey("GenreId")]
-    public Genre Genre { get; set; }
+    public Genre Genre { get; set; } = null!;
 }

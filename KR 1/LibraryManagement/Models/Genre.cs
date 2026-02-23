@@ -4,6 +4,13 @@ namespace LibraryManagement.Models;
 
 public class Genre
 {
+    public Genre()
+    {
+        Name = "";
+        Description = "";
+        Books = new HashSet<Book>();
+    }
+
     public int Id { get; set; }
     
     [Required]

@@ -5,19 +5,19 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Linq;
 using System.Windows;
-
+using LibraryManagement.Views;
 namespace LibraryManagement.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
     private readonly ApplicationDbContext _context;
-    private ObservableCollection<Book> _books;
-    private ObservableCollection<Author> _authors;
-    private ObservableCollection<Genre> _genres;
-    private string _searchText;
-    private Author _selectedAuthorFilter;
-    private Genre _selectedGenreFilter;
-    private Book _selectedBook;
+    private ObservableCollection<Book> _books = new();
+    private ObservableCollection<Author> _authors = new();
+    private ObservableCollection<Genre> _genres = new();
+    private string _searchText = string.Empty;
+    private Author? _selectedAuthorFilter;
+    private Genre? _selectedGenreFilter;
+    private Book? _selectedBook;
 
     public ObservableCollection<Book> Books
     {
@@ -47,7 +47,7 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public Author SelectedAuthorFilter
+    public Author? SelectedAuthorFilter
     {
         get => _selectedAuthorFilter;
         set
@@ -57,7 +57,7 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public Genre SelectedGenreFilter
+    public Genre? SelectedGenreFilter
     {
         get => _selectedGenreFilter;
         set
@@ -67,7 +67,7 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    public Book SelectedBook
+    public Book? SelectedBook
     {
         get => _selectedBook;
         set => SetProperty(ref _selectedBook, value);
@@ -134,12 +134,29 @@ public class MainViewModel : ViewModelBase
 
     private void AddBook()
     {
-        MessageBox.Show("Добавление книги", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        var bookWindow = new BookWindow(_context);
+        if (bookWindow.ShowDialog() == true)
+        {
+            if (bookWindow.CurrentBook.Id == 0)
+            {
+                _context.Books.Add(bookWindow.CurrentBook);
+            }
+            _context.SaveChanges();
+            LoadData();
+        }
     }
 
     private void EditBook()
     {
-        MessageBox.Show($"Редактирование книги: {SelectedBook?.Title}", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        if (SelectedBook == null) return;
+        var bookWindow = new BookWindow(_context, SelectedBook);
+        if (bookWindow.ShowDialog() == true)
+        {
+            _context.Entry(SelectedBook).CurrentValues.SetValues(bookWindow.CurrentBook);
+            _context.SaveChanges();
+            LoadData();
+        }
+        
     }
 
     private void DeleteBook()
@@ -162,11 +179,17 @@ public class MainViewModel : ViewModelBase
 
     private void ManageAuthors()
     {
-        MessageBox.Show("Управление авторами", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        var authorsWindow = new AuthorsWindow(_context);
+        authorsWindow.ShowDialog();
+        LoadData();
     }
+
+
 
     private void ManageGenres()
     {
-        MessageBox.Show("Управление жанрами", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        var genresWindow = new GenresWindow(_context);
+        genresWindow.ShowDialog();
+        LoadData();
     }
 }

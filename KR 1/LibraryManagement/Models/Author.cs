@@ -4,6 +4,14 @@ namespace LibraryManagement.Models;
 
 public class Author
 {
+    public Author()
+    {
+        FirstName = "";
+        LastName = "";
+        Country = "";
+        Books = new HashSet<Book>();
+    }
+
     public int Id { get; set; }
     
     [Required]
