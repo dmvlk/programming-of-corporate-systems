@@ -99,7 +99,7 @@ public class MainViewModel : ViewModelBase
     {
         _context.Authors.Load();
         _context.Genres.Load();
-        _context.Books.Include(b => b.Author).Include(b => b.Genre).Load();
+        _context.Books.Include(b => b.Authors).Include(b => b.Genres).Load();
 
         Authors = new ObservableCollection<Author>(_context.Authors.Local);
         Authors.Insert(0, new Author { Id = 0, LastName = "Все авторы", FirstName = "" });
@@ -116,33 +116,43 @@ public class MainViewModel : ViewModelBase
     private void FilterBooks()
     {
         var query = _context.Books
-            .Include(b => b.Author)
-            .Include(b => b.Genre)
+            .Include(b => b.Authors)
+            .Include(b => b.Genres)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(SearchText))
             query = query.Where(b => b.Title.Contains(SearchText));
 
         if (SelectedAuthorFilter != null && SelectedAuthorFilter.Id != 0)
-            query = query.Where(b => b.AuthorId == SelectedAuthorFilter.Id);
+        {
+            query = query.Where(b => b.Authors.Any(a => a.Id == SelectedAuthorFilter.Id));
+        }
 
         if (SelectedGenreFilter != null && SelectedGenreFilter.Id != 0)
-            query = query.Where(b => b.GenreId == SelectedGenreFilter.Id);
-
+        {
+            query = query.Where(b => b.Genres.Any(g => g.Id == SelectedGenreFilter.Id));
+        }
         Books = new ObservableCollection<Book>(query.ToList());
     }
 
     private void AddBook()
     {
-        var bookWindow = new BookWindow(_context);
-        if (bookWindow.ShowDialog() == true)
+        try
         {
-            if (bookWindow.CurrentBook.Id == 0)
+            var bookWindow = new BookWindow(_context);
+            if (bookWindow.ShowDialog() == true)
             {
-                _context.Books.Add(bookWindow.CurrentBook);
+                if (bookWindow.CurrentBook.Id == 0)
+                {
+                    _context.Books.Add(bookWindow.CurrentBook);
+                }
+                _context.SaveChanges();
+                LoadData();
             }
-            _context.SaveChanges();
-            LoadData();
+        }
+        catch (System.Exception ex)
+        {
+            MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

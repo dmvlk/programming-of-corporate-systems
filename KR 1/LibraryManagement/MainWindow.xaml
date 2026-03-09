@@ -29,10 +29,10 @@
                      ToolTip="Поиск по названию книги"/>
 
             <ComboBox ItemsSource="{Binding Authors}"
-                      SelectedItem="{Binding SelectedAuthorFilter}"
-                      DisplayMemberPath="LastName"
-                      Width="150" Margin="5,0"
-                      ToolTip="Фильтр по автору"/>
+                    SelectedItem="{Binding SelectedAuthorFilter}"
+                    DisplayMemberPath="FullName"
+                    Width="200" Margin="5,0"
+                    ToolTip="Фильтр по автору"/>
 
             <ComboBox ItemsSource="{Binding Genres}"
                       SelectedItem="{Binding SelectedGenreFilter}"
@@ -70,8 +70,8 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
                 <DataGridTextColumn Header="Название" Binding="{Binding Title}" Width="*"/>
-                <DataGridTextColumn Header="Автор" Binding="{Binding Author.FullName}" Width="*"/>
-                <DataGridTextColumn Header="Жанр" Binding="{Binding Genre.Name}" Width="*"/>
+                <DataGridTextColumn Header="Авторы" Binding="{Binding AuthorsDisplay}" Width="*"/>
+                <DataGridTextColumn Header="Жанры" Binding="{Binding GenresDisplay}" Width="*"/>
                 <DataGridTextColumn Header="Год" Binding="{Binding PublishYear}" Width="Auto"/>
                 <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="150"/>
                 <DataGridTextColumn Header="Издатель" Binding="{Binding Publisher}" Width="*"/>

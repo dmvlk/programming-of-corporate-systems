@@ -50,7 +50,6 @@ public partial class AuthorsWindow : Window
             LoadAuthors();
         }
     }
-
     private void DeleteButton_Click(object sender, RoutedEventArgs e)
     {
         var selectedAuthor = AuthorsDataGrid.SelectedItem as Author;
@@ -60,12 +59,14 @@ public partial class AuthorsWindow : Window
                 MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
-        if (_context.Books.Any(b => b.AuthorId == selectedAuthor.Id))
+
+        if (_context.Books.Any(b => b.Authors.Any(a => a.Id == selectedAuthor.Id)))
         {
             MessageBox.Show("Нельзя удалить автора, у которого есть книги", "Ошибка", 
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
+
         var result = MessageBox.Show($"Удалить автора {selectedAuthor.FirstName} {selectedAuthor.LastName}?",
             "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 

@@ -58,7 +58,8 @@ public partial class GenresWindow : Window
                 MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
-        if (_context.Books.Any(b => b.GenreId == selectedGenre.Id))
+
+        if (_context.Books.Any(b => b.Genres.Any(g => g.Id == selectedGenre.Id)))
         {
             MessageBox.Show("Нельзя удалить жанр, к которому привязаны книги", "Ошибка", 
                 MessageBoxButton.OK, MessageBoxImage.Warning);

@@ -10,6 +10,8 @@ public class Book
         Title = "";
         ISBN = "";
         Publisher = "";
+        Authors = new HashSet<Author>();
+        Genres = new HashSet<Genre>();
     }
 
     public int Id { get; set; }
@@ -30,12 +32,9 @@ public class Book
     
     public int QuantityInStock { get; set; }
     
-    public int AuthorId { get; set; }
-    public int GenreId { get; set; }
+    public ICollection<Author> Authors { get; set; }
+    public ICollection<Genre> Genres { get; set; }
     
-    [ForeignKey("AuthorId")]
-    public Author Author { get; set; } = null!;
-    
-    [ForeignKey("GenreId")]
-    public Genre Genre { get; set; } = null!;
+    public string AuthorsDisplay => string.Join(", ", Authors.Select(a => a.FullName));
+    public string GenresDisplay => string.Join(", ", Genres.Select(g => g.Name));
 }

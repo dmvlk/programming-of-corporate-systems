@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using LibraryManagement.Models;
+
 namespace LibraryManagement.Data;
 
 public class ApplicationDbContext : DbContext
@@ -15,22 +16,24 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Настройка связи многие-ко-многим между Book и Author
+        modelBuilder.Entity<Book>()
+            .HasMany(b => b.Authors)
+            .WithMany(a => a.Books)
+            .UsingEntity(j => j.ToTable("BookAuthors"));
+
+        // Настройка связи многие-ко-многим между Book и Genre
+        modelBuilder.Entity<Book>()
+            .HasMany(b => b.Genres)
+            .WithMany(g => g.Books)
+            .UsingEntity(j => j.ToTable("BookGenres"));
+
         // Настройка Book
         modelBuilder.Entity<Book>(entity =>
         {
             entity.HasKey(b => b.Id);
             entity.Property(b => b.Title).IsRequired().HasMaxLength(200);
             entity.Property(b => b.ISBN).IsRequired().HasMaxLength(13);
-            
-            entity.HasOne(b => b.Author)
-                .WithMany(a => a.Books)
-                .HasForeignKey(b => b.AuthorId)
-                .OnDelete(DeleteBehavior.Restrict);
-                
-            entity.HasOne(b => b.Genre)
-                .WithMany(g => g.Books)
-                .HasForeignKey(b => b.GenreId)
-                .OnDelete(DeleteBehavior.Restrict);
         });
 
         // Настройка Author
