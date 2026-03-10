@@ -23,7 +23,7 @@ public partial class GenresWindow : Window
     }
     private void AddButton_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new GenreDialogWindow();
+        var dialog = new GenreDialogWindow(_context);
         if (dialog.ShowDialog() == true)
         {
             _context.Genres.Add(dialog.CurrentGenre);
@@ -41,7 +41,7 @@ public partial class GenresWindow : Window
             return;
         }
 
-        var dialog = new GenreDialogWindow(selectedGenre);
+        var dialog = new GenreDialogWindow(_context, selectedGenre);
         if (dialog.ShowDialog() == true)
         {
             _context.Entry(selectedGenre).CurrentValues.SetValues(dialog.CurrentGenre);

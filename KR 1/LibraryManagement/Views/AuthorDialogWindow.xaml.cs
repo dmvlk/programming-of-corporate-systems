@@ -1,16 +1,20 @@
 using LibraryManagement.Data;
 using LibraryManagement.Models;
 using System;
+using System.Linq;
 using System.Windows;
+
 namespace LibraryManagement.Views;
 
 public partial class AuthorDialogWindow : Window
 {
+    private readonly ApplicationDbContext _context;
     public Author CurrentAuthor { get; private set; }
 
     public AuthorDialogWindow(ApplicationDbContext context, Author? authorToEdit = null)
     {
         InitializeComponent();
+        _context = context;
         
         if (authorToEdit != null)
         {
@@ -43,6 +47,35 @@ public partial class AuthorDialogWindow : Window
         CountryTextBox.Text = CurrentAuthor.Country;
     }
 
+    private bool CheckAuthorUniqueness()
+    {
+        var currentId = CurrentAuthor?.Id ?? 0;
+        
+        var existingAuthor = _context.Authors
+            .FirstOrDefault(a => 
+                a.FirstName == FirstNameTextBox.Text.Trim() &&
+                a.LastName == LastNameTextBox.Text.Trim() &&
+                a.MiddleName == (string.IsNullOrWhiteSpace(MiddleNameTextBox.Text) ? null : MiddleNameTextBox.Text.Trim()) &&
+                a.BirthDate == BirthDatePicker.SelectedDate &&
+                a.Country == CountryTextBox.Text.Trim() &&
+                a.Id != currentId);
+        
+        if (existingAuthor != null)
+        {
+            var message = $"Такой автор уже существует:\n\n" +
+                        $"Имя: {existingAuthor.FullName}\n" +
+                        $"Дата рождения: {existingAuthor.BirthDate:dd.MM.yyyy}\n" +
+                        $"Страна: {existingAuthor.Country}\n\n" +
+                        $"Рекомендуется воспользоваться поиском авторов.";
+            
+            MessageBox.Show(message, "Автор уже существует", 
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+        
+        return true;
+    }
+
     private void SaveButton_Click(object sender, RoutedEventArgs e)
     {
         if (string.IsNullOrWhiteSpace(LastNameTextBox.Text))
@@ -60,6 +93,10 @@ public partial class AuthorDialogWindow : Window
         if (BirthDatePicker.SelectedDate == null)
         {
             MessageBox.Show("Выберите дату рождения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        if (!CheckAuthorUniqueness())
+        {
             return;
         }
 

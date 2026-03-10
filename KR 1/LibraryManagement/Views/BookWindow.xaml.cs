@@ -70,6 +70,31 @@ public partial class BookWindow : Window
         }
     }
 
+    private bool CheckIsbnUniqueness()
+    {
+        var existingBook = _context.Books
+            .Include(b => b.Authors)
+            .Include(b => b.Genres)
+            .FirstOrDefault(b => b.ISBN == ISBNTextBox.Text.Trim() && b.Id != CurrentBook.Id);
+        
+        if (existingBook != null)
+        {
+            var message = $"Книга с таким ISBN уже существует:\n\n" +
+                         $"Название: {existingBook.Title}\n" +
+                         $"Авторы: {existingBook.AuthorsDisplay}\n" +
+                         $"Жанры: {existingBook.GenresDisplay}\n" +
+                         $"Год: {existingBook.PublishYear}\n" +
+                         $"Издатель: {existingBook.Publisher}\n" +
+                         $"В наличии: {existingBook.QuantityInStock}";
+            
+            MessageBox.Show(message, "Ошибка: ISBN не уникален", 
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+        
+        return true;
+    }
+
     private void AddAuthorButton_Click(object sender, RoutedEventArgs e)
     {
         if (AuthorComboBox.SelectedItem is Author selectedAuthor)
@@ -143,7 +168,7 @@ public partial class BookWindow : Window
 
     private void CreateGenreButton_Click(object sender, RoutedEventArgs e)
     {
-        var dialog = new GenreDialogWindow();
+        var dialog = new GenreDialogWindow(_context);
         if (dialog.ShowDialog() == true)
         {
             _context.Genres.Add(dialog.CurrentGenre);
@@ -185,6 +210,11 @@ public partial class BookWindow : Window
         if (!int.TryParse(QuantityTextBox.Text, out int quantity) || quantity < 0)
         {
             MessageBox.Show("Введите корректное количество", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        if (!CheckIsbnUniqueness())
+        {
             return;
         }
 

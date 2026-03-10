@@ -1,9 +1,6 @@
 <Window x:Class="LibraryManagement.Views.GenreDialogWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
         Title="Жанр" 
         Height="300" 
         Width="450"
@@ -24,7 +21,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Название жанра -->
+        <!-- Название -->
         <Label Grid.Row="0" Grid.Column="0" Content="Название:" Margin="5" VerticalAlignment="Center"/>
         <TextBox Grid.Row="0" Grid.Column="1" x:Name="NameTextBox" Margin="5" Padding="3" Height="30"/>
 
