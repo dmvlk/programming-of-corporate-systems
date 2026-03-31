@@ -1,0 +1,130 @@
+﻿<Window x:Class="NetworkAnalyzer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:NetworkAnalyzer.ViewModels"
+        Title="Анализатор сетевых подключений" 
+        Height="700" 
+        Width="1000"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <local:MainViewModel />
+    </Window.DataContext>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Анализатор сетевых подключений" 
+                   FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
+        <!-- Левая панель: Сетевые интерфейсы -->
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="LightGray" BorderThickness="1" Margin="5">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Сетевые интерфейсы" FontWeight="Bold" Margin="0,0,0,5"/>
+                
+                <ListBox Grid.Row="1" ItemsSource="{Binding NetworkInterfaces}" 
+                         SelectedItem="{Binding SelectedInterface}"
+                         DisplayMemberPath="Name"
+                         Height="Auto"/>
+                
+                <Border Grid.Row="2" BorderBrush="LightGray" BorderThickness="0,1,0,0" Margin="0,5,0,0">
+                    <TextBlock Text="{Binding SelectedInterfaceDetails}" 
+                               TextWrapping="Wrap" Margin="0,5,0,0"
+                               FontFamily="Consolas" FontSize="11"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Правая панель: Анализ URL -->
+        <Border Grid.Row="1" Grid.Column="1" BorderBrush="LightGray" BorderThickness="1" Margin="5">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Анализ URL/URI" FontWeight="Bold" Margin="0,0,0,5"/>
+                
+                <TextBox Grid.Row="1" Text="{Binding UrlInput, UpdateSourceTrigger=PropertyChanged}" 
+                         Margin="0,0,0,5" Padding="5" Height="30"
+                         ToolTip="Введите URL (например, https://example.com)"/>
+                
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,5">
+                    <Button Content="Анализировать" Command="{Binding AnalyzeUrlCommand}" 
+                            Width="100" Height="30" Margin="0,0,5,0"/>
+                    <Button Content="Проверить доступность (Ping)" Command="{Binding PingCommand}" 
+                            Width="150" Height="30" Margin="0,0,5,0"/>
+                </StackPanel>
+                
+                <TextBlock Grid.Row="3" Text="Результат анализа:" FontWeight="Bold" Margin="0,5,0,5"/>
+                
+                <TextBox Grid.Row="4" Text="{Binding AnalysisResult}" 
+                         IsReadOnly="True" TextWrapping="Wrap"
+                         FontFamily="Consolas" VerticalScrollBarVisibility="Auto"
+                         Background="#F5F5F5" Padding="5"/>
+                
+                <TextBlock Grid.Row="5" Text="Результат проверки доступности:" FontWeight="Bold" Margin="0,5,0,5"/>
+                
+                <TextBox Grid.Row="6" Text="{Binding PingResult}" 
+                         IsReadOnly="True" TextWrapping="Wrap"
+                         FontFamily="Consolas" Height="60" 
+                         Background="#F5F5F5" Padding="5"/>
+            </Grid>
+        </Border>
+
+        <!-- Нижняя панель: История проверок -->
+        <Border Grid.Row="2" Grid.ColumnSpan="2" BorderBrush="LightGray" BorderThickness="1" Margin="5">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="История проверенных URL" FontWeight="Bold" Margin="0,0,0,5"/>
+                <Button Grid.Row="0" Grid.Column="1" Content="Очистить историю" 
+                        Command="{Binding ClearHistoryCommand}" Width="100" Height="25"/>
+                
+                <ListBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding UrlHistory}" Height="120">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="2">
+                                <TextBlock Text="{Binding CheckTime, StringFormat='HH:mm:ss'}" Width="60"/>
+                                <TextBlock Text="{Binding Url}" Width="300" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding IsAvailable, StringFormat='✓ Доступен'}" 
+                                           Foreground="Green" Width="80" Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibility}}"/>
+                                <TextBlock Text="{Binding IsAvailable, StringFormat='✗ Недоступен'}" 
+                                           Foreground="Red" Width="80" Visibility="{Binding IsAvailable, Converter={StaticResource InverseBoolToVisibility}}"/>
+                                <TextBlock Text="{Binding IpAddress}" Width="120" FontSize="10"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
